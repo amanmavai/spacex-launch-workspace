@@ -101,17 +101,20 @@ export default function Home({ data, filteredData }) {
     setLanding(landing)
   }
   return (
-    <div className={styles.container}>
+    
+    <div className='bg-gray-200 px-8 py-12 max-w-5xl mx-auto'>
       <Head>
         <title>SpaceX Launch</title>
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <aside>
+      <div className='flex max-w-full'>
+      <aside className = 'w-1/5'>
         Filters:
         <div>Launch Year</div>
         {launch_year_filters.map((year) => {
           return (
             <button
+              key={year}
               onClick={() => handleClickYear(year)}
               className={selectedYear === year ? _css.btnSelected : _css.btn}
             >
@@ -134,17 +137,17 @@ export default function Home({ data, filteredData }) {
           false
         </button>
       </aside>
-      <main className={styles.main}>
-        <h1 className={styles.title}>SpaceX Launch Programs</h1>
+      <main className='w-4/5'>
+        <h1 className='text-2xl'>SpaceX Launch Programs</h1>
 
-        <div className={styles.grid}>
+        <div className='max-w-full flex flex-wrap'>
           {getVisibleRecords().map((item) => {
             let _props = item
-            return <SpaceXCard {..._props} />
+            return <SpaceXCard {..._props} key={item.flight_number}/>
           })}
         </div>
       </main>
-
+      </div>
       <footer className={styles.footer}>
         <a href='#' target='_blank' rel='noopener noreferrer'>
           Powered by spacex launch
@@ -160,7 +163,7 @@ export async function getServerSideProps({ query }) {
   const res = await fetch(`https://api.spaceXdata.com/v3/launches?limit=100`)
   const data = await res.json()
 
-  let filteredData = undefined
+  let filteredData = null
   if (Object.keys(query).length > 0) {
     let neededFilters = Object.entries(query).filter(([key, value]) => Boolean(value) && key !== 'land_success')
     let filterString = neededFilters.flatMap((j) => j.join('=')).join('&')

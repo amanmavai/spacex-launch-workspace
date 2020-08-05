@@ -2,8 +2,10 @@ export function SpaceXCard(props) {
   const { links, mission_name, flight_number, mission_id, launch_year, launch_success, launch_landing } = props
 
   return (
-    <div className='bg-white rounded-lg p-6'>
-      <img src={links.mission_patch} className='h-24 w-24 md:h-32 md:w-32 mx-auto md:mx-0' alt='img' />
+    <div className='bg-white rounded-lg p-6 m-4 w-42'>
+      <div className='bg-gray-300 p-4'>
+      <img src={links.mission_patch} className='h-24 w-24 mx-auto md:mx-0 object-cover object-center' alt='img' />
+      </div>
 
       <div className=''>{`${mission_name} #${flight_number}`}</div>
       <div>
