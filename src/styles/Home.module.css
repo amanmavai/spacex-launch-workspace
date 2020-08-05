@@ -115,6 +115,19 @@
   height: 1em;
 }
 
+.selected{
+  padding: 5px;
+  margin: 5px;
+  color: green;
+  background: lightblue;
+  border: none;
+}
+
+.filterButtons{
+  padding: 5px;
+  margin: 5px;
+  cursor: pointer;
+}
 @media (max-width: 600px) {
   .grid {
     width: 100%;
