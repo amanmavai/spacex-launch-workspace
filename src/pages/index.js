@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import styles from '../styles/Home.module.css'
 import { SpaceXCard } from '../components/SpaceXCard'
+import { FilterLabel } from '../components/FilterLabel'
 import { useEffect } from 'react'
 
 let _css = {
@@ -28,16 +28,18 @@ const launch_year_filters = [
 export default function Home({ data, filteredData }) {
   const router = useRouter()
   function getVisibleRecords() {
-    debugger;
-    if(filteredData && isMounted.current===0){
-      return filteredData;
+    if (filteredData && isMounted.current === 0) {
+      return filteredData
+    }
+    if (isMounted.current === 0 && !filteredData) {
+      return data
     }
     return data.filter((item) => item.launch_year === selectedYear.toString() && item.launch_success === launch)
   }
 
-  let isMounted = React.useRef(0);
-  useEffect(()=>{
-    isMounted.current++;
+  let isMounted = React.useRef(0)
+  useEffect(() => {
+    isMounted.current++
   })
   // API end point for the first-time page load without any Filters
   // https://api.const router = useRouter()spaceXdata.com/v3/launches?limit=100
@@ -101,58 +103,62 @@ export default function Home({ data, filteredData }) {
     setLanding(landing)
   }
   return (
-    
-    <div className='bg-gray-200 px-8 py-12 max-w-5xl mx-auto'>
+    <div class='grid grid-cols-1 md:grid-cols-5 gap-2 m-16 '>
       <Head>
         <title>SpaceX Launch</title>
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <div className='flex max-w-full'>
-      <aside className = 'w-1/5'>
-        Filters:
-        <div>Launch Year</div>
-        {launch_year_filters.map((year) => {
-          return (
-            <button
-              key={year}
-              onClick={() => handleClickYear(year)}
-              className={selectedYear === year ? _css.btnSelected : _css.btn}
-            >
-              {year}
-            </button>
-          )
-        })}
-        <div>Successful Launch</div>
-        <button className={launch ? _css.btnSelected : _css.btn} onClick={() => handleSetLaunch(true)}>
-          true
-        </button>
-        <button className={!launch ? _css.btnSelected : _css.btn} onClick={() => handleSetLaunch(false)}>
-          false
-        </button>
-        <div>Successful Landing</div>
-        <button className={landing ? _css.btnSelected : _css.btn} onClick={() => handleSetLanding(true)}>
-          true
-        </button>
-        <button className={!landing ? _css.btnSelected : _css.btn} onClick={() => handleSetLanding(false)}>
-          false
-        </button>
-      </aside>
-      <main className='w-4/5'>
-        <h1 className='text-2xl'>SpaceX Launch Programs</h1>
-
-        <div className='max-w-full flex flex-wrap'>
-          {getVisibleRecords().map((item) => {
-            let _props = item
-            return <SpaceXCard {..._props} key={item.flight_number}/>
+      <div class='border border-solid border-gray-500 items-center justify-center'>
+        <div className='text-base w-full ml-4 font-bold'>Filters</div>
+        <div className='mx-12 my-2 border-b-2 border-solid border-gray-500 flex items-center justify-center'>
+          Launch Year
+        </div>
+        <div className='ml-4 flex flex-wrap'>
+          {launch_year_filters.map((year) => {
+            return (
+              <div className='my-2 ml-4'>
+                <FilterLabel
+                  isSelected={year === selectedYear}
+                  handleSelect={() => handleClickYear(year)}
+                  name={year}
+                />
+              </div>
+            )
           })}
         </div>
-      </main>
+        <div className='mx-12 my-2 border-b-2 border-solid border-gray-500 flex items-center justify-center'>
+          Successful Launch
+        </div>
+        <div className='flex ml-8 my-2'>
+          <div>
+            <FilterLabel isSelected={launch} handleSelect={() => handleSetLaunch(true)} name={'true'} />
+          </div>
+          <div className='ml-4'>
+            <FilterLabel isSelected={!launch} handleSelect={() => handleSetLaunch(false)} name={'false'} />
+          </div>
+        </div>
+        <div className='mx-12 my-2 border-b-2 border-solid border-gray-500 flex items-center justify-center'>
+          Successful Landing
+        </div>
+        <div className='flex ml-8 my-2'>
+          <div>
+            <FilterLabel isSelected={landing} handleSelect={() => handleSetLanding(true)} name={'true'} />
+          </div>
+          <div className='ml-4'>
+            <FilterLabel isSelected={!landing} handleSelect={() => handleSetLanding(false)} name={'false'} />
+          </div>
+        </div>
       </div>
-      <footer className={styles.footer}>
-        <a href='#' target='_blank' rel='noopener noreferrer'>
-          Powered by spacex launch
-        </a>
-      </footer>
+      <div class='bg-gray-100 col-span-4'>
+        <h1 className='text-2xl font-bold mt-4 flex flex-wrap items-center justify-center'>SpaceX Launch Programs</h1>
+
+        <div className='flex flex-wrap items-center justify-center'>
+          {getVisibleRecords().map((item) => {
+            let _props = item
+            return <SpaceXCard {..._props} key={item.flight_number} />
+          })}
+        </div>
+      </div>
     </div>
   )
 }
