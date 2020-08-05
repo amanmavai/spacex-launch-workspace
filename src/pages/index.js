@@ -152,13 +152,14 @@ export default function Home({ data, filteredData }) {
       <div class='bg-gray-100 col-span-4'>
         <h1 className='text-2xl font-bold mt-4 flex flex-wrap items-center justify-center'>SpaceX Launch Programs</h1>
 
-        <div className='flex flex-wrap items-center justify-center'>
+        <div className='flex flex-wrap justify-center'>
           {getVisibleRecords().map((item) => {
             let _props = item
             return <SpaceXCard {..._props} key={item.flight_number} />
           })}
         </div>
       </div>
+      <div className='col-span-5 flex justify-center my-6'><span className='font-semibold mr-2'>Developed by:</span> Aman Mavai</div>
     </div>
   )
 }

@@ -8,17 +8,17 @@ export function SpaceXCard(props) {
       </div>
 
       <div className='text-indigo-600 font-semibold'>{`${mission_name} #${flight_number}`}</div>
-      <div>
+      {mission_id.length > 0 && <div>
         <span className='font-semibold'>Mission Ids:</span>
-        <ul>
+        <ul className='ml-8'>
           {mission_id.map((m_id, _i) => (
             <li key={`${flight_number}-${_i}`}>{m_id}</li>
           ))}
         </ul>
-      </div>
+      </div>}
       <div><span className='font-semibold'>Launch Year: </span>{launch_year}</div>
       <div><span className='font-semibold'>Successful Launch: </span>{`${launch_success}`}</div>
-      <div><span className='font-semibold'>Successful Landing: </span>{`${launch_landing}`}</div>
+      {launch_landing && <div><span className='font-semibold'>Successful Landing: </span>{`${launch_landing}`}</div>}
     </div>
   )
 }
