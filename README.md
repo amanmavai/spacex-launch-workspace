@@ -20,6 +20,6 @@
      - would use Jest, react-testing-library
   2. Automation Testing
      - Cypress
-     - typescript
+  3. TypeScript
 
 
