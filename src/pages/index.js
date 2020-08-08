@@ -4,10 +4,13 @@ import {SpaceXCard} from '../components/SpaceXCard';
 import {FilterLabel} from '../components/FilterLabel';
 import {useEffect} from 'react';
 
-let _css = {
-  btn: 'bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded ml-2',
-  btnSelected: 'bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ml-2',
-};
+function FilterTitle({title}) {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="px-4 border-b-2 border-gray-300">{title}</div>
+    </div>
+  );
+}
 const launch_year_filters = [
   '2006',
   '2007',
@@ -41,20 +44,6 @@ export default function Home({data, filteredData}) {
   useEffect(() => {
     isMounted.current++;
   });
-  // API end point for the first-time page load without any Filters
-  // https://api.const router = useRouter()spaceXdata.com/v3/launches?limit=100
-
-  /**
-   * Launch Success Filter:
-   * https://api.spaceXdata.com/v3/launches?limit=100&launch_success=true
-   *
-   * Launch & Land Filter:
-   * https://api.spaceXdata.com/v3/launches?limit=100&launch_success=true&land_success=true
-   *
-   * All:
-   * https://api.spaceXdata.com/v3/launches?limit=100&launch_success=true&land_success=true&launch_year=2014
-   *
-   */
 
   const {launch_year, launch_success, land_success} = router.query;
 
@@ -64,10 +53,6 @@ export default function Home({data, filteredData}) {
   let [selectedYear, setSelectedYear] = React.useState(initYear);
   let [launch, setLaunch] = React.useState(initLaunch);
   let [landing, setLanding] = React.useState(initLanding);
-
-  // launch_success=true
-  // land_success=true
-  // launch_year=2014
 
   function handleClickYear(year) {
     router.push(
@@ -108,60 +93,58 @@ export default function Home({data, filteredData}) {
         <title>SpaceX Launch</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-2 m-16 ">
-        <div class="items-center justify-center">
-          <div className="text-base w-full ml-4 font-bold">Filters</div>
-          <div className="mx-12 my-2 border-b-2 border-solid border-gray-500 flex items-center justify-center">
-            Launch Year
-          </div>
-          <div className="ml-4 flex flex-wrap">
-            {launch_year_filters.map((year) => {
-              return (
-                <div className="my-2 ml-4">
-                  <FilterLabel
-                    isSelected={year === selectedYear}
-                    handleSelect={() => handleClickYear(year)}
-                    name={year}
-                  />
+      <div className="container  mx-auto bg-gray-200 p-2">
+        <div className="grid grid-cols-1 gap-1 md:grid-cols-7 lg:grid-cols-5">
+          <div className="md:col-span-7 lg:col-span-5 ml-2 font-bold">SpaceX Launch Programs</div>
+          <div className="bg-white font-semibold p-2 md:col-span-2 lg:col-span-1">
+            Filters
+            <div className="flex flex-col">
+              <FilterTitle title="Launch Year" />
+              <div className="flex flex-wrap justify-center items-center m-2">
+                {launch_year_filters.map((year) => {
+                  return (
+                    <div className="m-2 md:mx-0">
+                      <FilterLabel
+                        isSelected={year === selectedYear}
+                        handleSelect={() => handleClickYear(year)}
+                        name={year}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <FilterTitle title="Successful Launch" />
+              <div className="flex flex-wrap justify-center items-center m-2">
+                <div>
+                  <FilterLabel isSelected={launch} handleSelect={() => handleSetLaunch(true)} name={'true'} />
                 </div>
-              );
-            })}
-          </div>
-          <div className="mx-12 my-2 border-b-2 border-solid border-gray-500 flex items-center justify-center">
-            Successful Launch
-          </div>
-          <div className="flex ml-8 my-2">
-            <div>
-              <FilterLabel isSelected={launch} handleSelect={() => handleSetLaunch(true)} name={'true'} />
-            </div>
-            <div className="ml-4">
-              <FilterLabel isSelected={!launch} handleSelect={() => handleSetLaunch(false)} name={'false'} />
-            </div>
-          </div>
-          <div className="mx-12 my-2 border-b-2 border-solid border-gray-500 flex items-center justify-center">
-            Successful Landing
-          </div>
-          <div className="flex ml-8 my-2">
-            <div>
-              <FilterLabel isSelected={landing} handleSelect={() => handleSetLanding(true)} name={'true'} />
-            </div>
-            <div className="ml-4">
-              <FilterLabel isSelected={!landing} handleSelect={() => handleSetLanding(false)} name={'false'} />
+                <div className="ml-4">
+                  <FilterLabel isSelected={!launch} handleSelect={() => handleSetLaunch(false)} name={'false'} />
+                </div>
+              </div>
+              <FilterTitle title="Successful Landing" />
+              <div className="flex flex-wrap justify-center items-center m-2">
+                <div>
+                  <FilterLabel isSelected={landing} handleSelect={() => handleSetLanding(true)} name={'true'} />
+                </div>
+                <div className="ml-4">
+                  <FilterLabel isSelected={!landing} handleSelect={() => handleSetLanding(false)} name={'false'} />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="bg-gray-100 md:col-span-4">
-          <h1 className="text-2xl font-bold mt-4 flex flex-wrap items-center justify-center">SpaceX Launch Programs</h1>
-
-          <div className="flex flex-wrap justify-center">
+          <div
+            style={{justifyItems: 'center'}}
+            className="container md:px-2 md:col-span-5 lg:col-span-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1"
+          >
             {getVisibleRecords().map((item) => {
               let _props = item;
               return <SpaceXCard {..._props} key={item.flight_number} />;
             })}
           </div>
         </div>
-        <div className="md:col-span-5 flex justify-center my-6">
-          <span className="font-semibold mr-2">Developed by:</span> Aman Mavai
+        <div className="fixed bottom-0 left-0 w-full flex justify-center items-center bg-purple-200 text-base font-hairline tracking-widest">
+          Developed By: Aman Mavai
         </div>
       </div>
     </>
